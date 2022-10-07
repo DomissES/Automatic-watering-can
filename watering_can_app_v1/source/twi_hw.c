@@ -64,7 +64,7 @@ ISR(TWI_vect)
 	f_twi_transmit_data_interrupt();
 }
 
-static inline void f_twi_send_address(_twi_data *element)//tu se sprawdzam czy mi git dziala 
+static inline void f_twi_send_address(_twi_data *element)
 {
 	TWDR = element->address | element->rw;
 	SEND_TRANSMIT;
@@ -142,7 +142,7 @@ static inline _twi_data* f_twi_transmission_handler(_twi_data *element)
 				Twi.state = twi_idle;
 				f_sys_report_error(err_twi_gen, 2);
 				SEND_STOP;
-			//TODO::przypadki inne ni¿ powy¿sze
+			//TODO:: other errors
 	}
 	return element;
 }

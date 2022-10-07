@@ -43,7 +43,7 @@ bool g_hmi_lock_buttons;
 
 /* funkcja malo czytelna, wymaga opisu:
 	funkcja przyjmuje jako parametr strukture zawierajaca adresy rejestrow
-	ktore nalezy zmienic, parametry wyzej zdefiniowane
+	ktore nalezy zmienic
 */
 static bool f_hmi_button_interrupt_routine(_button_register *b)
 {

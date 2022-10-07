@@ -77,7 +77,7 @@ _state_flow ps_error()
 		
 		
 	}
-	return (_state_flow){s_fini, NULL}; // zaœ
+	return (_state_flow){s_fini, NULL};
 }
 
 _state_flow ps_init()
