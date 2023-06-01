@@ -194,9 +194,6 @@
     <Compile Include="header\twi_hw.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="header\uart_hw.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="header\uart_service.h">
       <SubType>compile</SubType>
     </Compile>
@@ -252,9 +249,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="source\twi_hw.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="source\uart_hw.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="source\uart_service.c">

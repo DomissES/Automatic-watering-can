@@ -31,25 +31,27 @@ Wystarczy włożyć sondę do ziemi, przygotować pojemnik z wodą i ustawić od
 
 #### 4. Wygląd zbudowanego układu:
 
-![Built system](blob/master/working_system_edit.jpg)
+![Built system](assets/working_system_edit.jpg)
 
 #### 5. Schemat działania programu:
 
-![App flow](blob/master/App_flow.png)
-
+![App flow](assets/App_flow.png)
 
 <details>
 <summary>Kilka komentarzy</summary>
 
-Docelowo ma być to dwustrefowy sterownik do szklarni, stąd tyle wyprowadzeń i definicji pinów w pliku defines.h.
-W celu przejrzystości kodu i jego hermetyzacji występuje tutaj sporo funkcji "get" i "set", które są niewydajne w porównaniu do zmiennych globalnych.
+Główne działanie programu oparto na maszynie stanów, która wykorzystuje wskaźniki na funkcję. Dodatkowo istnieje kolejka tzw. zadań (tasks),
+które okresowo mają się wykonywać.
+Docelowo ma być to dwustrefowy sterownik do szklarni, stąd tyle wyprowadzeń i definicji pinów w pliku defines.h. A ten program jest początkiem większego projektu.
+W wielu miejscach programu stosowano funkcje malloc() i free(). Nie jest to zalecane, ale dołożono starań, aby wszystko działało bez błędu. Z tego względu napisałem dodatkowo funkcje sprawdzające stan pamięci RAM.
+Ze względu na kilka błędów w projekcie PCB, niektóre funkcje programu (np. czytanie enkodera) muszą być wykonywane w sposób mało optymalny.
 </details>
 
 
 <details>
 <summary>Na temat układu elektronicznego</summary>
 
-Układ oparty na mikrokontrolerze Atmega64A, płytki PCB zaprojektowane przez autora.
+Układ oparty na mikrokontrolerze Atmega64A, płytki PCB zaprojektowane przeze mnie.
 W obudowie znajduje się płytka z mikrokontrolerem, płytka zewnętrzna to układ zasilający.
 Zasilanie z 12V, docelowo możliwość podłączenia pod ogniwo fotowoltaiczne z akumulatorem AGM.
 </details>
@@ -65,7 +67,7 @@ Zasilanie z 12V, docelowo możliwość podłączenia pod ogniwo fotowoltaiczne z
 	- Zawiera podstawową obsługę błędów
 	
 - memory.c
-	- Zawiera funkcje sprawdzające stan pamięci RAM oraz funkcje "malloc" i "free" będące non reentrant
+	- Zawiera funkcje sprawdzające stan pamięci RAM oraz funkcje malloc() i free() będące non reentrant
 
 - state_machine.c
 	- Implementacja maszyny stanów
@@ -73,7 +75,7 @@ Zasilanie z 12V, docelowo możliwość podłączenia pod ogniwo fotowoltaiczne z
 
 - program_states.c
 	- Zawiera główne funkcje pełniące jako stany maszyny.
-	- W przypadku dodania kolejnych stanów należałoby podzielić na osobne pliki
+	- Jest to długi plik. W przypadku dodania kolejnych stanów należałoby podzielić na osobne pliki
 
 - period_task.c
 	- Timer działający w trybie CTC o zmiennym czasie wywołania
@@ -123,7 +125,6 @@ Zasilanie z 12V, docelowo możliwość podłączenia pod ogniwo fotowoltaiczne z
 	- Obsługa przycisków, enkodera, brzęczyka i LED
 	- LEDy i brzęczyk mogą być włączane okresowo, całość dzieje się "w tle" (przy pomocy timera period_task)
 	- W celu dodania różnych możliwości odczytu przycisku (długość wciśnięcia) funkcje wyglądają na dość skomplikowane
-	- Tu kod można zoptymalizować używając bezpośrednio rejestrów, a nie makrodefinicji "SET(<bit>)" "CLEAR(<bit>)" - zostawiono tak dla przejrzystości kodu
 
 - adc.c
 	- Obsługa przetwornika ADC
@@ -183,8 +184,10 @@ Check Point 5. in PL section
 <details>
 <summary>Few comments</summary>
 
-The controller was built to be a two-zone glasshouse controller. That's why there is so many pin definitions in file defines.h
-For better clarity and hermetization of the code there is a lot of "get" and "set" functions, which are not as efficient as using global variables.
+Main program is written on a state machine architecture, which uses function pointers. Additional for executing repeatable tasks, there is a special "tasks" queue.
+The controller was built to be a two-zone glasshouse controller. That's why there is so many pin definitions in file defines.h. And this program is a prototype for a bigger project.
+In many places I used malloc() and free() functions, which are not recommended. But I tried to do not any mistake. For helping me out, I wrote functions which are testing RAM status.
+Due to few mistakes in PCB project some functionalities (e.g. Encoder reading) have to be written in non best way. 
 </details>
 
 
@@ -207,7 +210,7 @@ To power the controller you need a 12V power supply. In the future there would b
 	- It includes basic error support
 	
 - memory.c
-	- RAM check functions and non reentrant "malloc" and "free" function implementation
+	- RAM check functions and non reentrant malloc() and free() function implementation
 
 - state_machine.c
 	- Implementation of a state machine
@@ -215,7 +218,7 @@ To power the controller you need a 12V power supply. In the future there would b
 
 - program_states.c
 	- Main functions which are called by the state machine
-	- In case of adding more states, the file should be split into smaller ones
+	- It is a long file. In case of adding more states, the file should be split into smaller ones
 
 - period_task.c
 	- "Tasks" are something like services or similar, they should be running in background without the need for immediate execution e.g. DHT22 or ADC measures, sending data to LCD display
@@ -268,7 +271,6 @@ To power the controller you need a 12V power supply. In the future there would b
 	- Support for buttons, encoder, buzzer and LEDs
 	- LED and buzzer could be toggled periodically, everything is executed "in background" (with help of period_task)
 	- The buttons could be read in different ways (e.g. how low the button was pressed), that's why the functions are quite complicated
-	- The code could be more optimized by using registers instead of "SET(<bit>)" "CLEAR(<bit>)" - left in this way for better code clarity
 
 
 - adc.c
